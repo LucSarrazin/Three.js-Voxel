@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'stats.js'
+import { generateWorld } from './world.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -16,15 +17,27 @@ renderer.setAnimationLoop( animate );
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+const controls = new OrbitControls(camera, renderer.domElement);
 
 camera.position.z = 5;
+camera.position.y = 5;
+camera.position.x = 5;
+
+generateWorld(scene);
 
 function animate(){
     stats.begin()
     renderer.render( scene, camera );
     stats.end()
 }
+
+
+
+
+// Resize window
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    //bloomComposer.setSize(window.innerWidth, window.innerHeight);
+});
